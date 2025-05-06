@@ -6,8 +6,8 @@
 
 int main(){
     printf("\nProgram is running:\n");
-    char x = bas64_int(0x1);
-    printf("%c\n", x);
+    s1c1();
+    
 }
 
 
