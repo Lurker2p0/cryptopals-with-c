@@ -2,5 +2,5 @@
 #include <stdint.h>
 
 int main(){
-    p
+    printf("Hello World\n");
 }
