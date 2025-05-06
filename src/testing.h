@@ -2,4 +2,4 @@
 #include <stdint.h>
 #include <string.h>
 
-void s1c1();
+void s1c1_test();

@@ -6,9 +6,7 @@
 
 int main(){
     printf("\nProgram is running:\n");
-    s1c1();
+    s1c1_test();
     
 }
 
-
-//I need a function to take a string in here and 
