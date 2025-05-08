@@ -25,3 +25,25 @@ void s1c1_test(){
     printf("the answer should have been:\n%s\n", "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t");
     
 }
+
+void s1c2_test(){
+    int INPUT_LEN = 36;
+    //INPUT_LEN = 6;
+    char* buf1  = malloc(INPUT_LEN*sizeof(char));
+    char* buf2  = malloc(INPUT_LEN*sizeof(char));
+
+
+    strcpy(buf1,"1c0111001f010100061a024b53535009181c");
+    strcpy(buf2,"686974207468652062756c6c277320657965");
+
+    //strcpy(input, "999999");
+    printf("Applying XOR translation to \n%s\n and\n%s\n,", buf1, buf2);
+
+    char* output  = malloc(INPUT_LEN*sizeof(char)); //allocate for output
+
+    solve_s1c2(buf1,buf2,output, INPUT_LEN); // takes string input
+    printf("it returned:\n%s\n", output);
+
+    printf("real answer:\n%s\n", "746865206b696420646f6e277420706c6179");
+    
+}

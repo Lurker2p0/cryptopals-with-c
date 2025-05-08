@@ -39,27 +39,72 @@ uint8_t char_to_hex(char input){
     return -1;
 }
 
+//checks the lsbs of a byte and returns a char
+char hex_to_char(uint8_t input){
+    switch(input & 0x0F){
+        case 0x0: return '0';
+        case 0x1: return '1';
+        case 0x2: return '2';
+        case 0x3: return '3';
+        case 0x4: return '4';
+        case 0x5: return '5';
+        case 0x6: return '6';
+        case 0x7: return '7';
+        case 0x8: return '8';
+        case 0x9: return '9';
+        case 0xa: return 'a';
+        case 0xb: return 'b';
+        case 0xc: return 'c';
+        case 0xd: return 'd';
+        case 0xe: return 'e';
+        case 0xf: return 'f';
+        default:
+            break;
+    }
+    return -1;
+}
+
+void char_to_byte_array(char* input, uint8_t* output, int len) {
+    //takes a char array and outputs a byte array. the chars are in hex so...
+    for (int i = 0; i < len/2; i++){
+        output[i] = (char_to_hex(input[2*i]) << 4) | (char_to_hex(input[2*i+1])); //b is now a full byte array from the hex input
+    }
+
+}
+
+void bytes_to_char_array(uint8_t* input, char* output, int len) {
+    //takes a char array and outputs a byte array. the chars are in hex so...
+    //len is the length of the output
+    for (int i = 0; i < len/2; i++){
+        output[2*i] = hex_to_char((0xF0 & input[i])>>4);
+        output[2*i+1] = hex_to_char((0x0F & input[i]));
+    }
+
+}
+
+// Functions to call to solve the challenges
+
 void solve_s1c1(char* input, char* output, int length){
     //iterate through the input to create hex array
     if(length %2 == 1){
         printf("length of b64 encode is odd\n");
     }
 
-    uint8_t* b = malloc(length*sizeof(uint8_t)/2);
+    uint8_t* b = malloc(length*sizeof(uint8_t)/2); //I dont free it :(
 
     for (int i = 0; i < length/2; i++){
         b[i] = b[i] & 0; // remove any memory        
         b[i] = (char_to_hex(input[2*i]) << 4) | (char_to_hex(input[2*i+1])); //b is now a full byte array from the hex input
-        printf("0x%x: ",b[i]);
+      //  printf("0x%x: ",b[i]);
 
     }
-    printf("%x, %x, %x\n",b[0],b[1],b[2]);
+    //printf("%x, %x, %x\n",b[0],b[1],b[2]);
     
     int out_i = 0; // tracks the output index
     int counter = 0;
     while(counter < length/2){ // iterate over byte array
-        printf("out_i = %d, ",out_i);
-        printf("counter = %d\n",counter);
+       // printf("out_i = %d, ",out_i);
+        //printf("counter = %d\n",counter);
 
         switch(out_i%4){
             case 0: 
@@ -80,13 +125,37 @@ void solve_s1c1(char* input, char* output, int length){
             default:
                 break;
         }
-        printf("out_i = %d, ",out_i);
-        printf("counter = %d\n",counter);
+        //printf("out_i = %d, ",out_i);
+        //printf("counter = %d\n",counter);
 
-        printf("num:%d = %c\n",out_i, output[out_i]);
+        //printf("num:%d = %c\n",out_i, output[out_i]);
 
         out_i++;
-        
+        //free(b);
     }
     //
+}
+
+
+void solve_s1c2(char* buf1, char* buf2, char* ans, int len){
+    //iterate through the buffers and write XOR to the answer
+    //len is the length of the buffers
+    if(len %2 == 1){
+        printf("length of char string is odd\n");
+    }
+
+    uint8_t* buf1c = malloc(sizeof(uint8_t)*len/2);
+    uint8_t* buf2c = malloc(sizeof(uint8_t)*len/2);
+    uint8_t* ansint = malloc(sizeof(uint8_t)*len/2);
+
+    char_to_byte_array(buf1,buf1c,len);
+    char_to_byte_array(buf2,buf2c,len);
+
+
+    for (int i = 0; i<len/2; i++){
+        ansint[i] = buf1c[i] ^ buf2c[i];
+    }
+
+    bytes_to_char_array(ansint,ans,len);
+
 }
