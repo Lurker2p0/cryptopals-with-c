@@ -55,6 +55,8 @@ void s1c2_test(){
 }
 
 void s1c3_test(){
+    printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 3 ~~~~~~~~~~~~~~~\n");
+
     int INPUT_LEN = 68;
     //INPUT_LEN = 6;
     char* input  = malloc(INPUT_LEN*sizeof(char));
@@ -68,6 +70,19 @@ void s1c3_test(){
     solve_s1c3(input,output, INPUT_LEN); // takes string input
     printf("it returned:\n%s\n", output);
     printf("real answer:\n%s\n", "Cooking MC's like a pound of bacon");
+}
 
+
+void s1c4_test(){
     
+    printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 4 ~~~~~~~~~~~~~~~\n");
+    printf("Running decryption on the file:\n");
+    FILE *file = fopen("data/s1c4.txt", "r");
+    char* output = malloc(sizeof(char)*60/2);
+    solve_s1c4(file, output);
+
+    printf("The answer is:\n%s\n", output);
+
+
+
 }

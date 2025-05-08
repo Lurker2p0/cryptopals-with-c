@@ -84,7 +84,7 @@ void bytes_to_char_array(uint8_t* input, char* output, int len) {
 }
 
 //checks to see the number of character frequency
-int char_frequency(uint8_t* input, int len){
+int char_frequency(char* input, int len){
     int score = 0;
     int points = 0;
     for(int i = 0; i< len; i++){
@@ -195,9 +195,8 @@ void solve_s1c2(char* buf1, char* buf2, char* ans, int len){
 
 void solve_s1c3(char* input, char* output, int len){
     // goal is to decode something which has been encoded with a single byte
-    printf("I am working\n");
     uint8_t* bytes = malloc(sizeof(uint8_t)*len/2); //remember we're double packing it from chars
-    uint8_t* cur = malloc(sizeof(uint8_t)*len/2);
+    char* cur = malloc(sizeof(char)*len/2);
 
     char_to_byte_array(input,bytes,len);
 
@@ -218,7 +217,32 @@ void solve_s1c3(char* input, char* output, int len){
             }
         }
     }
-    printf("%dd\n", maximum);
     free(bytes);
     free(cur);
+}
+
+void solve_s1c4(FILE *file, char* ans){
+    // need to have a cap on the end of the file :) security related
+    //len is the max len of the file
+    int LEN = 256;
+    if(file==NULL){ // how to read file was from ai overview
+        perror("error opening file");
+    }
+    char line[LEN];
+    int LINE_LEN = 60;
+    int i = 0;
+    int max = 0; // track max score
+    int test = 0; // track max score
+    char* output = malloc(sizeof(char)*LINE_LEN/2); // assumes that each line is 60 characters
+    while(fgets(line, LEN,file)!= NULL){
+        solve_s1c3(line, output, LINE_LEN); // might fail on line 93 
+        test = char_frequency(output, LINE_LEN/2);
+        if (test>max){
+            max = test;
+            for (int j = 0; j<LINE_LEN/2;j++){
+                ans[j] = output[j];
+            }
+        }
+        i++;
+    }
 }

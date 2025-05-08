@@ -9,7 +9,7 @@ int main(){
     //s1c1_test();
     //s1c2_test();
     s1c3_test();
-
+    s1c4_test();
 
 }
 
