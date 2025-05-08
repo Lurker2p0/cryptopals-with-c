@@ -24,6 +24,9 @@ void s1c1_test(){
 
     printf("the answer should have been:\n%s\n", "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t");
     
+    free(input);
+    free(output);
+    
 }
 
 void s1c2_test(){
@@ -45,5 +48,8 @@ void s1c2_test(){
     printf("it returned:\n%s\n", output);
 
     printf("real answer:\n%s\n", "746865206b696420646f6e277420706c6179");
+    free(buf1);
+    free(buf2);
+    free(output);
     
 }

@@ -1,7 +1,6 @@
 /*
 This file will contain the helper functions that can solve the problems
-
- */
+*/
 
  #include <stdint.h>
  #include <string.h>
@@ -131,9 +130,10 @@ void solve_s1c1(char* input, char* output, int length){
         //printf("num:%d = %c\n",out_i, output[out_i]);
 
         out_i++;
-        //free(b);
+        
     }
     //
+    free(b);
 }
 
 
@@ -157,5 +157,12 @@ void solve_s1c2(char* buf1, char* buf2, char* ans, int len){
     }
 
     bytes_to_char_array(ansint,ans,len);
+    free(buf1c);
+    free(buf2c);
+    free(ansint);
+
+}
+
+void solve_s1c3(char* input, char* output, int len){
 
 }
