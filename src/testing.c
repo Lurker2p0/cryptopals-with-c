@@ -53,3 +53,21 @@ void s1c2_test(){
     free(output);
     
 }
+
+void s1c3_test(){
+    int INPUT_LEN = 68;
+    //INPUT_LEN = 6;
+    char* input  = malloc(INPUT_LEN*sizeof(char));
+
+    char* output  = malloc(sizeof(char)*INPUT_LEN/2); //allocate for output
+
+    strcpy(input,"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
+
+    //strcpy(input, "999999");
+    printf("Attempting to break XOR byte encryption on:\n%s\n", input);
+    solve_s1c3(input,output, INPUT_LEN); // takes string input
+    printf("it returned:\n%s\n", output);
+    printf("real answer:\n%s\n", "Cooking MC's like a pound of bacon");
+
+    
+}

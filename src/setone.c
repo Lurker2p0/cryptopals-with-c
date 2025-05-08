@@ -6,6 +6,8 @@ This file will contain the helper functions that can solve the problems
  #include <string.h>
  #include <stdio.h>
  #include <stdlib.h>
+ #include <ctype.h>
+
 
 // takes an integer and returns a base64 char
 char bas64_int(uint8_t cipher){
@@ -79,6 +81,34 @@ void bytes_to_char_array(uint8_t* input, char* output, int len) {
         output[2*i+1] = hex_to_char((0x0F & input[i]));
     }
 
+}
+
+//checks to see the number of character frequency
+int char_frequency(uint8_t* input, int len){
+    int score = 0;
+    int points = 0;
+    for(int i = 0; i< len; i++){
+        points = 0;
+        switch (tolower((char)input[i])) {
+            // from https://github.com/To1ne/cryptopals-c/blob/master/challenge_03/main.c
+            case 'e': ++points;
+            case 't': ++points;
+            case 'a': ++points;
+            case 'o': ++points;
+            case 'i': ++points;
+            case 'n': ++points; // missed the n
+            case ' ': ++points;
+            case 's': ++points;
+            case 'h': ++points;
+            case 'r': ++points;
+            case 'd': ++points;
+            case 'l': ++points;
+            case 'u': ++points;
+               score += points;
+               break;
+         }
+    }
+    return score;
 }
 
 // Functions to call to solve the challenges
@@ -164,5 +194,31 @@ void solve_s1c2(char* buf1, char* buf2, char* ans, int len){
 }
 
 void solve_s1c3(char* input, char* output, int len){
+    // goal is to decode something which has been encoded with a single byte
+    printf("I am working\n");
+    uint8_t* bytes = malloc(sizeof(uint8_t)*len/2); //remember we're double packing it from chars
+    uint8_t* cur = malloc(sizeof(uint8_t)*len/2);
 
+    char_to_byte_array(input,bytes,len);
+
+
+    int maximum = 0; // this is the metric we should keep
+    int testscore = 0;
+
+    for (int i = 0; i<256; i++) { // iterate over every hex value
+        for (int j = 0; j< len/2; j++){
+            cur[j] = bytes[j] ^ i;
+        }
+        testscore = 0;
+        testscore = char_frequency(cur,len/2);
+        if (testscore> maximum){
+            maximum = testscore;
+            for(int j = 0; j<len/2; j++){
+                output[j] = cur[j];
+            }
+        }
+    }
+    printf("%dd\n", maximum);
+    free(bytes);
+    free(cur);
 }
