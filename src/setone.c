@@ -80,7 +80,8 @@ void bytes_to_char_array(uint8_t* input, char* output, int len) {
         output[2*i] = hex_to_char((0xF0 & input[i])>>4);
         output[2*i+1] = hex_to_char((0x0F & input[i]));
     }
-
+   //printf("%s\n",output);
+    
 }
 
 //checks to see the number of character frequency
@@ -119,7 +120,7 @@ void solve_s1c1(char* input, char* output, int length){
         printf("length of b64 encode is odd\n");
     }
 
-    uint8_t* b = malloc(length*sizeof(uint8_t)/2); //I dont free it :(
+    uint8_t* b = malloc(length*sizeof(uint8_t)/2);
 
     for (int i = 0; i < length/2; i++){
         b[i] = b[i] & 0; // remove any memory        
@@ -245,4 +246,18 @@ void solve_s1c4(FILE *file, char* ans){
         }
         i++;
     }
+
+    free(output);
 }
+
+
+void solve_s1c5(char* input, char* output, char* key, int keylen, int len){
+    
+    uint8_t* output_ba = malloc(sizeof(char)*len);
+    for(int i = 0; i < len; i++){ // iterate over bytes
+        output_ba[i] = input[i] ^ key[i%keylen]; // key is ok because it's meant to be a char :)
+    }
+
+    bytes_to_char_array(output_ba,output, len*2);
+
+}    

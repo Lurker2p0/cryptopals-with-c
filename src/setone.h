@@ -25,3 +25,5 @@ void solve_s1c3(char* input, char* output, int len);
 
 
 void solve_s1c4(FILE *file, char* ans);
+
+void solve_s1c5(char* input, char* output, char* key, int keylen,  int len);
