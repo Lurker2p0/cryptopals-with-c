@@ -11,3 +11,9 @@ void s1c3_test();
 void s1c4_test();
 
 void s1c5_test();
+
+void s1c6_test();
+
+void s1c7_test();
+
+void s1c8_test();

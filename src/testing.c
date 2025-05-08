@@ -116,3 +116,23 @@ void s1c5_test(){
     printf("The answer is:\n%s\n", "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f");
 
 }
+
+void s1c6_test(){
+    printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 6 ~~~~~~~~~~~~~~~\n");
+    FILE* file_pointer = fopen("data/s1c6.txt", "rb");
+    char* output = malloc(sizeof(char)*74*2);
+    solve_s1c6(file_pointer, output);
+    
+    printf("%s", output);
+
+}
+
+
+void s1c7_test(){
+    
+}
+
+
+void s1c8_test(){
+    
+}

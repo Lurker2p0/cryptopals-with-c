@@ -24,6 +24,17 @@ char bas64_int(uint8_t cipher){
     return '?';
 }
 
+
+unsigned char hex_ascii_to_bin(unsigned char c) {
+    // taken from https://github.com/To1ne/cryptopals-c/blob/master/challenge_06/main.c
+    switch (c) {
+       case '0' ... '9' : return c - '0';
+       case 'a' ... 'f' : return c - 'a' + 10;
+       case 'A' ... 'F' : return c - 'A' + 10;
+    }
+    return '\0';
+ }
+ 
 //takes a char, returns a hex uint8_t
 uint8_t char_to_hex(char input){
     switch(input){
@@ -112,8 +123,23 @@ int char_frequency(char* input, int len){
     return score;
 }
 
-// Functions to call to solve the challenges
 
+int hamming_distance(char* buf1, char* buf2, int len){
+    //length is the len of a buffer
+    int dist = 0;
+    uint8_t cur = 0;
+    for(int i = 0; i<len; i++){
+        cur = buf1[i] ^ buf2[i];
+        for (int j = 0; j< 7; j++){
+            dist+= cur%2;
+            cur = cur >>1;
+        }
+    }
+    return dist;
+
+}
+
+// Functions to call to solve the challenges
 void solve_s1c1(char* input, char* output, int length){
     //iterate through the input to create hex array
     if(length %2 == 1){
@@ -260,4 +286,49 @@ void solve_s1c5(char* input, char* output, char* key, int keylen, int len){
 
     bytes_to_char_array(output_ba,output, len*2);
 
-}    
+}
+
+void solve_s1c6(FILE *file, char* ans){
+    char *buffer;
+    long file_size;
+
+    if (file == NULL) {
+        perror("Error opening file");
+    }
+
+    fseek(file, 0, SEEK_END);
+    file_size = ftell(file);
+    rewind(file);
+
+    buffer = (char*)malloc(sizeof(char) * (file_size + 1));
+    if (buffer == NULL) {
+        perror("Error allocating memory");
+        fclose(file);
+    }
+
+    size_t bytes_read = fread(buffer, 1, file_size, file);
+    if (bytes_read != file_size) {
+        perror("Error reading file");
+        free(buffer);
+        fclose(file);
+    }
+
+    buffer[file_size] = '\0';
+
+    //printf("File content:\n%s\n", buffer);
+
+    printf("len is %d\n", file_size);
+
+    free(buffer);
+    fclose(file);
+
+}
+
+
+void solve_s1c7(){
+
+}
+
+void solve_s1c8(){
+
+}
