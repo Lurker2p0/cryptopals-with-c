@@ -24,16 +24,32 @@ char bas64_int(uint8_t cipher){
     return '?';
 }
 
-
-unsigned char hex_ascii_to_bin(unsigned char c) {
-    // taken from https://github.com/To1ne/cryptopals-c/blob/master/challenge_06/main.c
-    switch (c) {
-       case '0' ... '9' : return c - '0';
-       case 'a' ... 'f' : return c - 'a' + 10;
-       case 'A' ... 'F' : return c - 'A' + 10;
+unsigned char bas64_to_hex(char cipher){
+    //takes a b64 char and outputs the hex of that in a six bit format
+    switch (cipher){
+        case 'A'...'Z': return (cipher -'A');
+        case 'a' ... 'z': return (cipher-'a')+26;
+        case '0'...'9': return (cipher-'0')+52;
+        case '+': return 62;
+        case '-': return 63;
+        default:
+            break;
     }
-    return '\0';
- }
+    return '?';
+}
+
+
+void base64_to_bytes(char* input, char* output, size_t *len){
+    //iterate through each char from the input
+    // N b64 => -X for =, - Y for /n
+    // which is N*6 bites, which is N*6/8 points 
+    int sub = 0;
+    for(int i = 0; i< len; i++){
+        break;
+    }
+    //check the base shift thing
+    
+}
  
 //takes a char, returns a hex uint8_t
 uint8_t char_to_hex(char input){
@@ -297,7 +313,7 @@ void solve_s1c6(FILE *file, char* ans){
     }
 
     fseek(file, 0, SEEK_END);
-    file_size = ftell(file);
+    file_size = ftell(file); // this is all the characters in the file.
     rewind(file);
 
     buffer = (char*)malloc(sizeof(char) * (file_size + 1));
@@ -313,11 +329,12 @@ void solve_s1c6(FILE *file, char* ans){
         fclose(file);
     }
 
-    buffer[file_size] = '\0';
+    buffer[file_size] = '\0'; // buffer is a string object representing the file.
 
-    //printf("File content:\n%s\n", buffer);
 
-    printf("len is %d\n", file_size);
+    printf("File content:\n%s\n", buffer);
+
+    printf("len is %ld\n", file_size);
 
     free(buffer);
     fclose(file);

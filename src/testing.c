@@ -119,7 +119,7 @@ void s1c5_test(){
 
 void s1c6_test(){
     printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 6 ~~~~~~~~~~~~~~~\n");
-    FILE* file_pointer = fopen("data/s1c6.txt", "rb");
+    FILE* file_pointer = fopen("data/test.txt", "rb");
     char* output = malloc(sizeof(char)*74*2);
     solve_s1c6(file_pointer, output);
     
