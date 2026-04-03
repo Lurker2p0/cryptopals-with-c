@@ -1,3 +1,7 @@
-setone:
-	gcc src/main.c src/setone.c src/testing.c -o run.o
+all:
+	gcc -O0 src/main.c src/setone.c src/testing.c -o run.o
 	./run.o
+
+clean:
+	rm run.o
+

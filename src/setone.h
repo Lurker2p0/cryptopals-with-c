@@ -9,6 +9,7 @@
 //takes a 6-bit hex value, returns a char base64 value, -1 if fails
 char bas64_int(uint8_t cipher);
 
+int hamming_distance(char* buf1, char* buf2, int len);
 
 //Helper functions
 
@@ -27,3 +28,5 @@ void solve_s1c3(char* input, char* output, int len);
 void solve_s1c4(FILE *file, char* ans);
 
 void solve_s1c5(char* input, char* output, char* key, int keylen,  int len);
+
+void solve_s1c6(FILE *file, char* ans);

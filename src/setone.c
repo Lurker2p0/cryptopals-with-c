@@ -24,6 +24,58 @@ char bas64_int(uint8_t cipher){
     return '?';
 }
 
+unsigned char base64_to_hex(char cipher){
+    //takes a b64 char and outputs the hex of that in a six bit format
+    switch (cipher){
+        case 'A'...'Z': return (cipher -'A');
+        case 'a' ... 'z': return (cipher-'a')+26;
+        case '0'...'9': return (cipher-'0')+52;
+        case '+': return 62;
+        case '-': return 63;
+        default:
+            break;
+    }
+    return '?';
+}
+
+
+void base64_to_bytes(char* input, char* output, int len_i, int len_o){
+    //iterate through each char from the input
+    // N b64 => -X for =, - Y for /n
+    // which is N*6 bites, which is N*6/8 points 
+    char* temp = malloc(sizeof(char)* (len_i));
+    int offset = 0;
+    for(int i = 0; i< len_i; i++){
+        if (input[i] == '\n' || input[i]=='='){ // check for things that dont have bytes in em
+            offset++;
+            continue;
+        }
+        temp[i-offset] = base64_to_hex(input[i]);
+    }
+    
+    //make it into actual byte values
+    int i_sb = 0;
+    for (int i = 0; i< len_o; i++){
+        switch (i%3)
+        {
+        case 0:
+            output[i] = ((temp[i_sb]<<2) & 0xFC)| ((temp[i_sb+i]>>4) & 0x03);
+            i_sb++;
+            break;
+        case 1:
+            output[i] = ((temp[i_sb] << 4) ) & ((temp[i_sb+1] & 0xC0)>>6);
+            break;
+        case 2:
+            /* code */
+            break;
+        default:
+            break;
+        }
+    }
+    free(temp);
+    
+}
+ 
 //takes a char, returns a hex uint8_t
 uint8_t char_to_hex(char input){
     switch(input){
@@ -112,15 +164,30 @@ int char_frequency(char* input, int len){
     return score;
 }
 
-// Functions to call to solve the challenges
 
+int hamming_distance(char* buf1, char* buf2, int len){
+    //length is the len of a buffer
+    int dist = 0;
+    uint8_t cur = 0;
+    for(int i = 0; i<len; i++){
+        cur = buf1[i] ^ buf2[i];
+        for (int j = 0; j< 7; j++){
+            dist+= cur%2;
+            cur = cur >>1;
+        }
+    }
+    return dist;
+
+}
+
+// Functions to call to solve the challenges
 void solve_s1c1(char* input, char* output, int length){
     //iterate through the input to create hex array
     if(length %2 == 1){
         printf("length of b64 encode is odd\n");
     }
 
-    uint8_t* b = malloc(length*sizeof(uint8_t)/2);
+    uint8_t* b = malloc(sizeof(uint8_t)*(length/2));
 
     for (int i = 0; i < length/2; i++){
         b[i] = b[i] & 0; // remove any memory        
@@ -175,9 +242,9 @@ void solve_s1c2(char* buf1, char* buf2, char* ans, int len){
         printf("length of char string is odd\n");
     }
 
-    uint8_t* buf1c = malloc(sizeof(uint8_t)*len/2);
-    uint8_t* buf2c = malloc(sizeof(uint8_t)*len/2);
-    uint8_t* ansint = malloc(sizeof(uint8_t)*len/2);
+    uint8_t* buf1c = malloc(sizeof(uint8_t) * len/2);
+    uint8_t* buf2c = malloc(sizeof(uint8_t) * len/2);
+    uint8_t* ansint = malloc(sizeof(uint8_t) * len/2);
 
     char_to_byte_array(buf1,buf1c,len);
     char_to_byte_array(buf2,buf2c,len);
@@ -229,7 +296,7 @@ void solve_s1c4(FILE *file, char* ans){
     if(file==NULL){ // how to read file was from ai overview
         perror("error opening file");
     }
-    char line[LEN];
+    char* line = malloc(sizeof(char)*LEN); // put this on the heap and it worked :)
     int LINE_LEN = 60;
     int i = 0;
     int max = 0; // track max score
@@ -247,17 +314,65 @@ void solve_s1c4(FILE *file, char* ans){
         i++;
     }
 
+    free(line);
     free(output);
 }
 
 
 void solve_s1c5(char* input, char* output, char* key, int keylen, int len){
     
-    uint8_t* output_ba = malloc(sizeof(char)*len);
+    uint8_t* output_ba = malloc(sizeof(uint8_t)*len);
     for(int i = 0; i < len; i++){ // iterate over bytes
-        output_ba[i] = input[i] ^ key[i%keylen]; // key is ok because it's meant to be a char :)
+        output_ba[i] = input[i] ^ key[i % keylen]; // key is ok because it's meant to be a char :)
     }
 
     bytes_to_char_array(output_ba,output, len*2);
+    free(output_ba);
 
-}    
+}
+
+void solve_s1c6(FILE *file, char* ans){
+    char *buffer;
+    long file_size;
+
+    if (file == NULL) {
+        perror("Error opening file");
+    }
+
+    fseek(file, 0, SEEK_END);
+    file_size = ftell(file); // this is all the characters in the file.
+    rewind(file);
+
+    buffer = (char*)malloc(sizeof(char) * (file_size + 1));
+    if (buffer == NULL) {
+        perror("Error allocating memory");
+        fclose(file);
+    }
+
+    size_t bytes_read = fread(buffer, 1, file_size, file);
+    if (bytes_read != file_size) {
+        perror("Error reading file");
+        free(buffer);
+        fclose(file);
+    }
+
+    buffer[file_size] = '\0'; // buffer is a string object representing the file.
+
+
+    printf("File content:\n%s\n", buffer);
+
+    printf("len is %ld\n", file_size);
+
+    free(buffer);
+    fclose(file);
+
+}
+
+
+void solve_s1c7(){
+
+}
+
+void solve_s1c8(){
+
+}
