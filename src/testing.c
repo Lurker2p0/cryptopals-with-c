@@ -12,7 +12,7 @@ void s1c1_test(){
 
     printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 1 ~~~~~~~~~~~~~~~\n");
 
-    int INPUT_LEN = 96;
+    int INPUT_LEN = 98; // made it a little bigger to account for the null character lol
     //INPUT_LEN = 6;
     char* input  = malloc(INPUT_LEN*sizeof(char));
 
@@ -22,7 +22,7 @@ void s1c1_test(){
 
     char* output  = malloc(INPUT_LEN*sizeof(char)); //allocate for output
 
-    solve_s1c1(input,output,INPUT_LEN); // takes string input
+    solve_s1c1(input, output, INPUT_LEN); // takes string input
     printf("it returned:\n%s\n", output);
 
     printf("the answer should have been:\n%s\n", "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t");
@@ -75,6 +75,8 @@ void s1c3_test(){
     solve_s1c3(input,output, INPUT_LEN); // takes string input
     printf("it returned:\n%s\n", output);
     printf("real answer:\n%s\n", "Cooking MC's like a pound of bacon");
+    free(input);
+    free(output);
 }
 
 
@@ -89,6 +91,8 @@ void s1c4_test(){
     printf("The code returned:\n%s", output);
 
     printf("The answer is:\n%s", "Now that the party is jumping\n");
+    free(output);
+    fclose(file);
 
 
 }
@@ -99,12 +103,22 @@ void s1c5_test(){
     printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 5 ~~~~~~~~~~~~~~~\n");
     printf("Encrypting with repeating XOR KEY:\n");
 
-    char* input = malloc(sizeof(char)*74);
-    char* key = malloc(sizeof(char)*3);
-    char* output = malloc(sizeof(char)*74*2);
+    char* input; 
+    char* key;
+    char* output;
 
-    strcpy(input,"Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal");
-    strcpy(key,"ICE");
+    input = malloc(sizeof(char)*74);
+
+    key = malloc(sizeof(char)*3);
+    printf("MADE IT THIS FAR\n");
+
+    output = malloc(sizeof(char)*74*2);
+    printf("MADE IT Out of MALLOC\n");
+
+
+
+    strcpy(input, "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal");
+    strcpy(key, "ICE");
 
     printf("The input is is:\n%s\n", input);
     printf("The key is is:\n%s\n", key);
@@ -114,7 +128,10 @@ void s1c5_test(){
     printf("The output is:\n%s\n", output);
 
     printf("The answer is:\n%s\n", "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f");
-
+    
+    free(input);
+    free(output);
+    free(key);
 }
 
 void s1c6_test(){
@@ -124,6 +141,8 @@ void s1c6_test(){
     solve_s1c6(file_pointer, output);
     
     printf("%s", output);
+    
+    fclose(file_pointer);
 
 }
 

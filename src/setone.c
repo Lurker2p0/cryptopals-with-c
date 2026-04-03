@@ -24,7 +24,7 @@ char bas64_int(uint8_t cipher){
     return '?';
 }
 
-unsigned char bas64_to_hex(char cipher){
+unsigned char base64_to_hex(char cipher){
     //takes a b64 char and outputs the hex of that in a six bit format
     switch (cipher){
         case 'A'...'Z': return (cipher -'A');
@@ -39,15 +39,40 @@ unsigned char bas64_to_hex(char cipher){
 }
 
 
-void base64_to_bytes(char* input, char* output, size_t *len){
+void base64_to_bytes(char* input, char* output, int len_i, int len_o){
     //iterate through each char from the input
     // N b64 => -X for =, - Y for /n
     // which is N*6 bites, which is N*6/8 points 
-    int sub = 0;
-    for(int i = 0; i< len; i++){
-        break;
+    char* temp = malloc(sizeof(char)* (len_i));
+    int offset = 0;
+    for(int i = 0; i< len_i; i++){
+        if (input[i] == '\n' || input[i]=='='){ // check for things that dont have bytes in em
+            offset++;
+            continue;
+        }
+        temp[i-offset] = base64_to_hex(input[i]);
     }
-    //check the base shift thing
+    
+    //make it into actual byte values
+    int i_sb = 0;
+    for (int i = 0; i< len_o; i++){
+        switch (i%3)
+        {
+        case 0:
+            output[i] = ((temp[i_sb]<<2) & 0xFC)| ((temp[i_sb+i]>>4) & 0x03);
+            i_sb++;
+            break;
+        case 1:
+            output[i] = ((temp[i_sb] << 4) ) & ((temp[i_sb+1] & 0xC0)>>6);
+            break;
+        case 2:
+            /* code */
+            break;
+        default:
+            break;
+        }
+    }
+    free(temp);
     
 }
  
@@ -162,7 +187,7 @@ void solve_s1c1(char* input, char* output, int length){
         printf("length of b64 encode is odd\n");
     }
 
-    uint8_t* b = malloc(length*sizeof(uint8_t)/2);
+    uint8_t* b = malloc(sizeof(uint8_t)*(length/2));
 
     for (int i = 0; i < length/2; i++){
         b[i] = b[i] & 0; // remove any memory        
@@ -217,9 +242,9 @@ void solve_s1c2(char* buf1, char* buf2, char* ans, int len){
         printf("length of char string is odd\n");
     }
 
-    uint8_t* buf1c = malloc(sizeof(uint8_t)*len/2);
-    uint8_t* buf2c = malloc(sizeof(uint8_t)*len/2);
-    uint8_t* ansint = malloc(sizeof(uint8_t)*len/2);
+    uint8_t* buf1c = malloc(sizeof(uint8_t) * len/2);
+    uint8_t* buf2c = malloc(sizeof(uint8_t) * len/2);
+    uint8_t* ansint = malloc(sizeof(uint8_t) * len/2);
 
     char_to_byte_array(buf1,buf1c,len);
     char_to_byte_array(buf2,buf2c,len);
@@ -271,7 +296,7 @@ void solve_s1c4(FILE *file, char* ans){
     if(file==NULL){ // how to read file was from ai overview
         perror("error opening file");
     }
-    char line[LEN];
+    char* line = malloc(sizeof(char)*LEN); // put this on the heap and it worked :)
     int LINE_LEN = 60;
     int i = 0;
     int max = 0; // track max score
@@ -289,18 +314,20 @@ void solve_s1c4(FILE *file, char* ans){
         i++;
     }
 
+    free(line);
     free(output);
 }
 
 
 void solve_s1c5(char* input, char* output, char* key, int keylen, int len){
     
-    uint8_t* output_ba = malloc(sizeof(char)*len);
+    uint8_t* output_ba = malloc(sizeof(uint8_t)*len);
     for(int i = 0; i < len; i++){ // iterate over bytes
-        output_ba[i] = input[i] ^ key[i%keylen]; // key is ok because it's meant to be a char :)
+        output_ba[i] = input[i] ^ key[i % keylen]; // key is ok because it's meant to be a char :)
     }
 
     bytes_to_char_array(output_ba,output, len*2);
+    free(output_ba);
 
 }
 
