@@ -12,6 +12,7 @@ char bas64_int(uint8_t cipher);
 int hamming_distance(char* buf1, char* buf2, int len);
 
 //Helper functions
+void char_to_byte_array(char* input, char* output, int len);
 
 //takes a char, returns a hex value, -1 if fails
 uint8_t char_to_hex(char input);
@@ -22,7 +23,7 @@ void solve_s1c1(char* input, char* output, int length);
 void solve_s1c2(char* buf1, char* buf2, char* ans, int len);
 
 
-void solve_s1c3(char* input, char* output, int len);
+uint8_t solve_s1c3(char* input, char* output, int len);
 
 
 void solve_s1c4(FILE *file, char* ans);

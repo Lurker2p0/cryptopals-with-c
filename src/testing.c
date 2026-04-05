@@ -12,12 +12,13 @@ void s1c1_test(){
 
     printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 1 ~~~~~~~~~~~~~~~\n");
 
-    int INPUT_LEN = 98; // made it a little bigger to account for the null character lol
+    int INPUT_LEN = 97; // made it a little bigger to account for the null character lol
     //INPUT_LEN = 6;
     char* input  = malloc(INPUT_LEN*sizeof(char));
 
     strcpy(input,"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d");
     //strcpy(input, "999999");
+    printf("string len = %lu\n", strlen(input));
     printf("Applying base64 translation to:\n%s\n", input);
 
     char* output  = malloc(INPUT_LEN*sizeof(char)); //allocate for output
@@ -66,13 +67,22 @@ void s1c3_test(){
     //INPUT_LEN = 6;
     char* input  = malloc(INPUT_LEN*sizeof(char));
 
+    char* input_bytes  = malloc(sizeof(char)*INPUT_LEN/2); //allocate for output
     char* output  = malloc(sizeof(char)*INPUT_LEN/2); //allocate for output
 
     strcpy(input,"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
 
+    char_to_byte_array(input, input_bytes, INPUT_LEN);
+    for(int i = 0; i<INPUT_LEN/2; i++){
+        printf("%x ", input_bytes[i]);
+    }
+    printf("\n");
+
+
+
     //strcpy(input, "999999");
     printf("Attempting to break XOR byte encryption on:\n%s\n", input);
-    solve_s1c3(input,output, INPUT_LEN); // takes string input
+    uint8_t key = solve_s1c3(input_bytes,output, INPUT_LEN/2); // takes string input
     printf("it returned:\n%s\n", output);
     printf("real answer:\n%s\n", "Cooking MC's like a pound of bacon");
     free(input);
@@ -136,13 +146,17 @@ void s1c5_test(){
 
 void s1c6_test(){
     printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 6 ~~~~~~~~~~~~~~~\n");
-    FILE* file_pointer = fopen("data/test.txt", "rb");
+    //FILE* file_pointer = fopen("data/s1c6.txt", "rb");
+    FILE* file_pointer = fopen("data/s1c6.txt", "rb");
+
     char* output = malloc(sizeof(char)*74*2);
     solve_s1c6(file_pointer, output);
     
     printf("%s", output);
     
+
     fclose(file_pointer);
+    free(output);
 
 }
 
