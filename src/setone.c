@@ -317,7 +317,7 @@ uint8_t solve_s1c3(char* input, char* output, int len){
             }
         }
     }
-    printf("The key was %X\n", Key);
+    //printf("The key was %X\n", Key);
     free(cur);
     return Key;
 }
@@ -334,9 +334,14 @@ void solve_s1c4(FILE *file, char* ans){
     int i = 0;
     int max = 0; // track max score
     int test = 0; // track max score
+    uint8_t* line_arr = malloc(sizeof(char)*LINE_LEN/2); // assumes that each line is 60 characters
     char* output = malloc(sizeof(char)*LINE_LEN/2); // assumes that each line is 60 characters
-    while(fgets(line, LEN,file)!= NULL){
-        solve_s1c3(line, output, LINE_LEN); // might fail on line 93 
+
+    //char_to_byte_array(line,output,LINE_LEN);
+
+    while(fgets(line, LEN, file)!= NULL){
+        char_to_byte_array(line,line_arr,LINE_LEN);
+        solve_s1c3((char*)line_arr, output, LINE_LEN/2); // might fail on line 93 
         test = char_frequency(output, LINE_LEN/2);
         if (test>max){
             max = test;
@@ -347,8 +352,9 @@ void solve_s1c4(FILE *file, char* ans){
         i++;
     }
 
-    free(line);
+    free(line_arr);
     free(output);
+    free(line);
 }
 
 
@@ -356,9 +362,9 @@ void solve_s1c5(char* input, char* output, char* key, int keylen, int len){
     
     uint8_t* output_ba = malloc(sizeof(uint8_t)*len);
     for(int i = 0; i < len; i++){ // iterate over bytes
-        printf("%X xor %X --> ", input[i], key[i % keylen]);
+        //printf("%X xor %X --> ", input[i], key[i % keylen]);
         output_ba[i] = input[i] ^ key[i % keylen]; // key is ok because it's meant to be a char :)
-        printf("%X\n", output_ba[i]);
+        //printf("%X\n", output_ba[i]);
     }
 
     bytes_to_char_array(output_ba,output, len*2);
@@ -412,20 +418,21 @@ void solve_s1c6(FILE *file, char* ans){
     strip_buffer[buf_len] = '\0';
     
     uint8_t * byte_array = (uint8_t*)malloc(sizeof(uint8_t) * ((buf_len * 6) / 8));
-    int array_len = (buf_len * 6) / 8; // lenght of th byte array...last bytes might be padding
+    int array_len = (buf_len * 6) / 8 - 1; // lenght of th byte array...last bytes might be padding
+    // POTENTIAL HACKY FIXTODO: fix the hacky thing did a - 1 for padding.
 
-    printf("Before: %s\n", strip_buffer);
+    //printf("Before: %s\n", strip_buffer);
         
     char * key = "ICE";
     base64_to_bytes(strip_buffer, byte_array, buf_len, array_len);
 
-    for(i=0; i<array_len-1; i++)
-        printf("%x ",byte_array[i]);
-    printf("\n");
+    //for(i=0; i<array_len-1; i++)
+        //printf("%x ",byte_array[i]);
+    //printf("\n");
 
-    for(i=0; i<array_len-1; i++)
-        printf("%c",byte_array[i] ^ key[i % 3]);
-    printf("\n");
+    //for(i=0; i<array_len-1; i++)
+     //   printf("%c",byte_array[i] ^ key[i % 3]);
+    //printf("\n");
 
     int KEYSIZE;
 
@@ -440,16 +447,14 @@ void solve_s1c6(FILE *file, char* ans){
         cur_score += (double)(hamming_distance(&byte_array[3*KEYSIZE], &byte_array[4*KEYSIZE], KEYSIZE))/KEYSIZE;
         cur_score += (double)(hamming_distance(&byte_array[4*KEYSIZE], &byte_array[5*KEYSIZE], KEYSIZE))/KEYSIZE;
         cur_score = cur_score / 5;
-        printf("KEYSIZE = %d, score = %0.2f\n", KEYSIZE, cur_score);
+        //printf("KEYSIZE = %d, score = %0.2f\n", KEYSIZE, cur_score);
         if (cur_score < min_score){
             min_score = cur_score;
             min_key = KEYSIZE;
-            if(cur_score < 3.0)
-                printf("HEREHREHRHEH");
         }
         cur_score = 0;
     }
-    printf("min_key = %d, with min_score = %0.2f\n", min_key, min_score); // Probably gonna be a keysize of 5
+    //printf("min_key = %d, with min_score = %0.2f\n", min_key, min_score); // Probably gonna be a keysize of 5
     KEYSIZE = 29;
 
     char * temp_arr = (char*)malloc(sizeof(char) * (array_len/KEYSIZE)); // make it just bigger lol

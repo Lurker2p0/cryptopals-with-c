@@ -98,7 +98,7 @@ void s1c4_test(){
     char* output = malloc(sizeof(char)*60/2);
     solve_s1c4(file, output);
 
-    printf("The code returned:\n%s", output);
+    printf("The code returned:\n%s\n", output);
 
     printf("The answer is:\n%s", "Now that the party is jumping\n");
     free(output);
@@ -162,7 +162,8 @@ void s1c6_test(){
 
 
 void s1c7_test(){
-    
+    FILE* file_pointer = fopen("data/s1c6.txt", "rb");
+
 }
 
 
