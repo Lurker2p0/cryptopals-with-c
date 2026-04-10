@@ -6,8 +6,10 @@ This file is for runnning the expected test for all of the challenges
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
-#include "setone.h"
+#include "set1/setone.h"
+#include "set2/set2_chal1.h"
 
+/* ~~~~~~~~~~~~~~~~~~~~~~~~ SET 1 TESTS ~~~~~~~~~~~~~~~~~~~~~~~~ */
 void s1c1_test(){
 
     printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 1 ~~~~~~~~~~~~~~~\n");
@@ -316,7 +318,71 @@ void s1c8_test(){
     }
     printf("\n");
 
-
+    free(buffer);
     fclose(file);
     
+}
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~ SET 2 TESTS ~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+void s2c1_test() {
+
+    printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 1 ~~~~~~~~~~~~~~~\n");
+
+    char* input = "YELLOW SUBMARINE"; // Length
+    int IN_LEN = 16;
+    int OUT_LEN = 20;
+    uint8_t byte_input[IN_LEN];
+    uint8_t byte_output[OUT_LEN];
+    
+    int i;
+    
+    printf("Adding PKCS#7 Padding\n");
+    printf("Before:\n");
+
+    for (i = 0; i < IN_LEN; i++) {
+        byte_input[i] = (uint8_t) input[i];
+        printf("%x\t", byte_input[i]);
+    }
+    add_padding(byte_input, byte_output, IN_LEN, OUT_LEN);
+
+
+    printf("\nAfter:\n");
+
+    for (i = 0; i < OUT_LEN; i++) {
+        printf("%x\t", byte_output[i]);
+    }
+    printf("\n");
+
+
+
+}
+
+void s2c2_test() {
+
+}
+
+void s2c3_test() {
+
+}
+
+void s2c4_test() {
+
+}
+
+void s2c5_test() {
+
+}
+
+void s2c6_test() {
+
+}
+
+void s2c7_test() {
+
+}
+
+void s2c8_test() {
+
 }
