@@ -67,7 +67,7 @@ void s1c3_test(){
     //INPUT_LEN = 6;
     char* input  = malloc(INPUT_LEN*sizeof(char));
 
-    char* input_bytes  = malloc(sizeof(char)*INPUT_LEN/2); //allocate for output
+    uint8_t* input_bytes  = malloc(sizeof(char)*INPUT_LEN/2); //allocate for output
     char* output  = malloc(sizeof(char)*INPUT_LEN/2); //allocate for output
 
     strcpy(input,"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736");
@@ -82,13 +82,12 @@ void s1c3_test(){
 
     //strcpy(input, "999999");
     printf("Attempting to break XOR byte encryption on:\n%s\n", input);
-    uint8_t key = solve_s1c3(input_bytes,output, INPUT_LEN/2); // takes string input
+    uint8_t key = solve_s1c3((char*) input_bytes, output, INPUT_LEN/2); // takes string input
     printf("it returned:\n%s\n", output);
     printf("real answer:\n%s\n", "Cooking MC's like a pound of bacon");
     free(input);
     free(output);
 }
-
 
 void s1c4_test(){
     
@@ -106,7 +105,6 @@ void s1c4_test(){
 
 
 }
-
 
 void s1c5_test(){
     
@@ -167,7 +165,6 @@ void s1c6_test(){
     free(output);
 
 }
-
 
 void s1c7_test(){
     printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 7 ~~~~~~~~~~~~~~~\n");
@@ -238,10 +235,88 @@ void s1c7_test(){
     printf("%s", plaintext);
     printf("END TESTing\n");
     free(plaintext); 
+    free(byte_array);
+    free(strip_buffer);
+
+    fclose(file);
+
 
 }
 
-
 void s1c8_test(){
+    printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 8 ~~~~~~~~~~~~~~~\n");
+    FILE* file = fopen("data/s1c8.txt", "rb");
+    char *buffer;
+    long file_size;
+    if (file == NULL) {
+        perror("Error opening file");
+    }
+
+    fseek(file, 0, SEEK_END);
+    file_size = ftell(file); // this is all the characters in the file.
+    rewind(file);
+
+    buffer = (char*)malloc(sizeof(char) * (file_size + 1)); // +1 for \0
+    if (buffer == NULL) {
+        perror("Error allocating memory");
+        fclose(file);
+    }
+
+    size_t bytes_read = fread(buffer, 1, file_size, file);
+    if (bytes_read != file_size) {
+        perror("Error reading file");
+        fclose(file);
+    }
+    int i; int j;
+    int num_lines = 0;
+    int buf_len = 0; //strip iterator and final length
+    int linelen = 0;
+
+    uint8_t byte_array[204][160];
+    uint8_t temp[160] = {0x00};
+    char temp_c[320];
+    int c_i = 0;
+    int k = 0; // row counter
+    int col = 0; //col counter, inner for
+    while(buffer[i] != '\0'){
+        if(buffer[i] == '\n'){
+            char_to_byte_array(temp_c, temp, 320);
+            for(col = 0; col < 160; col++)
+                byte_array[k][col] = temp[col];
+            k++;
+            i++;
+            num_lines++;
+            c_i = 0;
+            continue;
+        }
+        else {
+            temp_c[c_i] = buffer[i];
+            c_i++;
+            i++;
+            linelen++;
+        }
+    }
+
+    printf("number of lines = %d, linelen = %d\n", num_lines, linelen/num_lines/2);
+    if(num_lines != 204)
+        printf("missallocated array 204!\n");
+    if(linelen/num_lines/2 != 160)
+        printf("missallocated 160!\n");
+
+    linelen = linelen/num_lines/2;
+
+    int line_index = solve_s1c8(byte_array, num_lines);
+    
+    uint8_t cipher[160];
+    printf("the line is:\n");
+
+    for(i = 0; i < 160; i++){
+        cipher[i] = byte_array[132][i];
+        printf("%x ", cipher[i]);
+    }
+    printf("\n");
+
+
+    fclose(file);
     
 }

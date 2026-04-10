@@ -855,6 +855,28 @@ void solve_s1c7(uint8_t* ciphertext, char* key, uint8_t* plaintext, int c_len, i
 
 }
 
-void solve_s1c8(){
+int solve_s1c8(uint8_t line[][160], int num_lines){
+    int line_num, i, j, k; // i = 16byte hold pointer, j is the iterator pointer, k is the byte ptr
+    int line_len = 160;
+    uint8_t temp [16]; // 16 byte array
 
+    for(line_num = 0; line_num < num_lines; line_num++) // for all lines
+        for(i = 0; i < line_len; i+=16){ // select a 16 byte chunk
+            for(k = 0; k < 16; k++) // allocate temp with 16 byte chunk
+                temp[k] = line[line_num][i + k];
+            for(j = i + 16; j < line_len; j += 16) { // check rest of lines
+                for(k = 0; k < 16; k++) // check match
+                    if(temp[k] != line[line_num][j + k]) // not equal
+                        break; // go next
+                    else if (k == 15)
+                    {
+                        printf("Line %d is likely encoded with AES ECB\n", line_num);
+                        return line_num;
+                    }
+                    
+                
+        }
+    }
+    printf("Failed to find a line encoded with AES ECB\n");
+    return -1; 
 }
