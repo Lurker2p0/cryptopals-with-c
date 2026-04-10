@@ -11,7 +11,8 @@ int main(){
     s1c4_test();
     s1c5_test();
     s1c6_test();
-    
+    s1c7_test();
+    s1c8_test();
     return 0;
 }
 

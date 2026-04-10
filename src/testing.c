@@ -148,8 +148,16 @@ void s1c6_test(){
     printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 6 ~~~~~~~~~~~~~~~\n");
     //FILE* file_pointer = fopen("data/s1c6.txt", "rb");
     FILE* file_pointer = fopen("data/s1c6.txt", "rb");
+    
+    if (file_pointer == NULL) {
+        perror("Error opening file");
+    }
 
-    char* output = malloc(sizeof(char)*74*2);
+    fseek(file_pointer, 0, SEEK_END);
+    long file_size = ftell(file_pointer); // this is all the characters in the file.
+    rewind(file_pointer);
+
+    char* output = malloc(sizeof(char)*(file_size*6/8)); // good lord this is not the way to allocate memory :)
     solve_s1c6(file_pointer, output);
     
     printf("%s", output);
@@ -162,7 +170,74 @@ void s1c6_test(){
 
 
 void s1c7_test(){
-    FILE* file_pointer = fopen("data/s1c6.txt", "rb");
+    printf("\n~~~~~~~~~~~~~~~ SET 1: CHALLENGE 7 ~~~~~~~~~~~~~~~\n");
+    FILE* file = fopen("data/s1c7.txt", "rb");
+    char *buffer;
+    long file_size;
+    if (file == NULL) {
+        perror("Error opening file");
+    }
+
+    fseek(file, 0, SEEK_END);
+    file_size = ftell(file); // this is all the characters in the file.
+    rewind(file);
+
+    buffer = (char*)malloc(sizeof(char) * (file_size + 1)); // +1 for \0
+    if (buffer == NULL) {
+        perror("Error allocating memory");
+        fclose(file);
+    }
+
+    size_t bytes_read = fread(buffer, 1, file_size, file);
+    if (bytes_read != file_size) {
+        perror("Error reading file");
+        fclose(file);
+    }
+
+    buffer[file_size] = '\0'; // buffer is a string object representing the file.
+
+    //printf(buffer);
+    
+    char * strip_buffer = (char*)malloc(sizeof(char) * (file_size + 1)); // +1 for \0
+    int i = 0;  //buffer iterator
+    int buf_len = 0; //strip iterator and final length
+    
+    while(buffer[i] != '\0'){
+        if(buffer[i] == '\n'){
+            i++;
+            continue;
+        }
+        else {
+            strip_buffer[buf_len] = buffer[i];
+            i++;
+            buf_len++;
+        }
+    }
+    strip_buffer[buf_len] = '\0';
+    
+    uint8_t * byte_array = (uint8_t*)malloc(sizeof(uint8_t) * ((buf_len * 6) / 8));
+    int array_len = (buf_len * 6) / 8; // lenght of th byte array...last bytes might be padding
+    // POTENTIAL HACKY FIXTODO: fix the hacky thing did a - 1 for padding.
+
+    //printf("Before: %s\n", strip_buffer);
+    base64_to_bytes(strip_buffer, byte_array, buf_len, array_len);
+    //printf("After: ");
+    //for(i = 0; i < array_len; i++)
+      //  printf("%x ", byte_array[i]);
+    
+    char* key = "YELLOW SUBMARINE"; // yes it is actually the key
+    int p_len;
+    uint8_t* plaintext; // will be allocated in the functions so it's gotta be freed outside of it
+    int key_len = 16; // becasue 128 = 8 * 16. 
+    p_len = array_len;
+    plaintext =(uint8_t*)malloc(sizeof(uint8_t) * (p_len)); // +1 for \0
+
+    solve_s1c7(byte_array, key, plaintext, array_len, key_len, p_len);
+    
+    printf("plaintext: ");
+    printf("%s", plaintext);
+    printf("END TESTing\n");
+    free(plaintext); 
 
 }
 
